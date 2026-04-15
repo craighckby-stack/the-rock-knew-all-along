@@ -1,42 +1,17 @@
-# Craig's Interdimensional Science Synthesizer
+# 🧬 Craig's Science Machine
 
-Reads books. Makes science. Nobody asked for this.
+![Project Maturity](https://img.shields.io/badge/Maturity-MOCK--UP-orange)
 
-## What it does
+### 🔬 Fidelity Note
+This codebase represents a **Functional Mock-up**. While it contains actual integration logic for the Google Gemini API and physical file parsing via `pdftotext` and `python-docx`, it is currently structured as a Jupyter Notebook/Colab script. It lacks production-grade environment variable management (API keys are hardcoded strings), formal logging, and persistent data storage.
 
-Drops all your documents into Claude, summarises each one, then synthesises them into a single unhinged academic paper and downloads it as a PDF.
+### 🗺️ Technical Roadmap
+1. **Environment Security**: Transition hardcoded `API_KEY` to `.env` or Secret Manager usage.
+2. **Orchestration**: Wrap the script into a CLI or FastAPI service to handle concurrent requests.
+3. **Persistence Layer**: Implement a database (PostgreSQL/MongoDB) to track document metadata and synthesis history.
+4. **Robust Parsing**: Replace `subprocess.run` calls with native Python libraries (like `PyMuPDF`) for better error handling and performance.
 
-## Setup
-
-1. Get an API key from [console.anthropic.com](https://console.anthropic.com)
-2. Open `synthesizer.py` in Google Colab
-3. Paste your API key on line 6
-4. Upload your books to `/content/`
-5. Run it
-
-## Requirements
-
-```
-anthropic
-pdfplumber
-python-docx
-fpdf2
-poppler-utils (apt)
-2x joints (recommended)
-1x iced coffee (Craig-approved)
-```
-
-## Included
-
-- `synthesizer.py` — the machine
-- `666__A_Hilarious_History_of_Humanity_s_Beginnings_fin.PDF` — the book that started all this
-
-## Notes
-
-- The 666 PDF will not hang anymore. That was a PyPDF2 problem. It's gone.
-- The footer of every output PDF asks "does a rock know this is page N?"
-- This is non-negotiable.
-
----
-
-*Craig Huckerby Institute for Advanced Gibberish*
+### 💎 Value Chunks
+*   **Multi-Format Ingestion**: Includes a versatile `read_file` utility capable of handling `.pdf`, `.docx`, and `.txt` files seamlessly.
+*   **API Resilience**: Implements a dedicated retry loop with specific handling for `429 Rate Limit` errors, ensuring stability during bulk processing.
+*   **Native Layout Extraction**: Utilizes `pdftotext -layout` to preserve document structure, which is critical for context-aware AI analysis.

@@ -1,43 +1,46 @@
 # the-rock-knew-all-along
 
-## Summary
-A document processing and synthesis pipeline that extracts text from various file formats and generates unified thematic reports via the Gemini API. The system automates the ingestion of PDFs and Word documents to produce consolidated summaries and synthesized narratives.
+A high-throughput document processing and summarization engine utilizing the Google Gemini 2.0 Flash API. This project specializes in extracting text from diverse formats (PDF, DOCX, TXT) and generating idiosyncratic, scientifically-styled summaries via Large Language Models (LLMs).
 
-## Architecture Story
-The system operates as a linear extraction-to-synthesis pipeline. It utilizes `pdftotext` via subprocess calls to maintain layout integrity during PDF ingestion and `python-docx` for structured Word document parsing. Extracted text is segmented into chunks to accommodate context windows, processed through the Gemini 2.0 Flash model with a specific persona-driven prompt, and finally aggregated into a unified report. The architecture includes a retry layer to handle API rate limiting and quota errors inherent in free-tier LLM usage.
+## Features
 
-## Proof of Work
-The following logic block demonstrates the system's robust handling of API constraints and transient errors:
+- **Multi-Format Extraction**: Integrated support for PDF (via `poppler-utils`), DOCX (via `python-docx`), and plaintext files.
+- **Gemini 2.0 Flash Integration**: Leverages the latest Gemini models for high-speed, long-context window processing.
+- **Chunked Analysis**: Automatically segments large documents into manageable fragments to optimize API token usage and context relevance.
+- **Robust Error Handling**: Implements exponential backoff and rate-limit handling (429 errors) for stable execution on Gemini's free tier.
+- **Customizable Prompting**: Features a unique "scientific yet unhinged" persona for generating non-standard metadata and insights.
 
-python
-def ask_gemini(content, retries=3):
-    for attempt in range(retries):
-        try:
-            resp = model.generate_content(content)
-            return resp.text
-        except Exception as e:
-            err = str(e)[:120]
-            if "quota" in err.lower() or "429" in err:
-                print(f"\n  rate limited, waiting 30s...")
-                time.sleep(30)
-            elif attempt < retries - 1:
-                print(f"\n  retry {attempt+1}: {err}")
-                time.sleep(5)
-            else:
-                raise
+## Prerequisites
 
-**Technical Proficiency:** This implementation manages the volatility of remote API calls by incorporating exponential backoff and specific error-code sniffing (429/Quota), ensuring that long-running batch processes do not fail due to temporary network or rate-limiting constraints.
+- Python 3.8+
+- Poppler (for PDF processing)
+- Google Gemini API Key (obtainable from [Google AI Studio](https://aistudio.google.com))
 
-## Engine Specs
+## Installation
 
-| Component | Technology |
-| :--- | :--- |
-| Language | Python 3.x |
-| LLM | Google Gemini 2.0 Flash |
-| PDF Extraction | Poppler (pdftotext) |
-| Document Parsing | python-docx |
-| Export Formatting | fpdf2 |
-| Environment | Linux/Colab Support |
+Install the required system and Python dependencies:
 
-## Status
-**Functional Prototype**
+bash
+sudo apt-get install -qq poppler-utils
+pip install -q google-generativeai pdfplumber python-docx fpdf2
+
+
+## Usage
+
+1.  **Configure API Key**: Update `ApiGemini.py` with your `API_KEY`.
+2.  **Add Documents**: Place target documents in the `/content/` directory.
+3.  **Run the Synthesizer**:
+
+bash
+python ApiGemini.py
+
+
+## Technical Architecture
+
+1.  **Ingestion Layer**: `read_file()` detects extensions and routes files to specific parsing logic (e.g., `pdftotext` with layout preservation for PDFs).
+2.  **Processing Layer**: `summarise()` divides text into 6000-character chunks, ensuring comprehensive coverage of lengthy documents.
+3.  **Inference Layer**: `ask_gemini()` manages the stateful interaction with the `gemini-2.0-flash` model, handling retries and rate limiting.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

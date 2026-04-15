@@ -1,17 +1,34 @@
-# 🧬 Craig's Science Machine
+# The Rock Knew All Along
 
-![Project Maturity](https://img.shields.io/badge/Maturity-MOCK--UP-orange)
+![Maturity: Functional-Prototype](https://img.shields.io/badge/Maturity-Functional--Prototype-yellow)
+![Stack: Python/Gemini](https://img.shields.io/badge/Stack-Python_%7C_Gemini_2.0-blue)
 
-### 🔬 Fidelity Note
-This codebase represents a **Functional Mock-up**. While it contains actual integration logic for the Google Gemini API and physical file parsing via `pdftotext` and `python-docx`, it is currently structured as a Jupyter Notebook/Colab script. It lacks production-grade environment variable management (API keys are hardcoded strings), formal logging, and persistent data storage.
+## Project Overview
+A document synthesis and summarization engine designed to extract and reinterpret content from various file formats (PDF, DOCX, TXT) using the Gemini 2.0 Flash model. The system provides 'faintly unhinged' scientific summaries, specifically optimized for handling large documents through chunking and iterative API processing.
 
-### 🗺️ Technical Roadmap
-1. **Environment Security**: Transition hardcoded `API_KEY` to `.env` or Secret Manager usage.
-2. **Orchestration**: Wrap the script into a CLI or FastAPI service to handle concurrent requests.
-3. **Persistence Layer**: Implement a database (PostgreSQL/MongoDB) to track document metadata and synthesis history.
-4. **Robust Parsing**: Replace `subprocess.run` calls with native Python libraries (like `PyMuPDF`) for better error handling and performance.
+## Technical Stack
+- **LLM Engine:** Google Generative AI (`gemini-2.0-flash`)
+- **Document Parsing:** `pdfplumber`, `pdftotext` (Poppler), `python-docx`
+- **Environment:** Python (Colab optimized)
+- **Output Generation:** `fpdf2` for potential PDF synthesis
 
-### 💎 Value Chunks
-*   **Multi-Format Ingestion**: Includes a versatile `read_file` utility capable of handling `.pdf`, `.docx`, and `.txt` files seamlessly.
-*   **API Resilience**: Implements a dedicated retry loop with specific handling for `429 Rate Limit` errors, ensuring stability during bulk processing.
-*   **Native Layout Extraction**: Utilizes `pdftotext -layout` to preserve document structure, which is critical for context-aware AI analysis.
+## Core Capabilities
+- **Multi-Format Ingestion:** Automated detection and reading of PDFs, Word documents, and text files.
+- **Resilient API Interaction:** Implements a retry mechanism with exponential backoff for 429 (Quota) errors.
+- **Smart Chunking:** Splits large text blocks into manageable 6000-character segments for LLM context window compatibility.
+- **Automated Summarization:** Generates context-aware summaries across entire directories of files.
+
+## Standalone Value Chunks
+- **The Retry Logic:** A robust `ask_gemini` wrapper that handles common API failures gracefully.
+- **Layout-Preserving PDF Reading:** Uses `pdftotext -layout` for superior text extraction compared to basic PDF readers.
+
+## Production Gaps
+- **Secrets Management:** API keys are currently hardcoded as placeholders.
+- **Environment Dependencies:** Hardcoded `/content/` paths limit portability outside of Google Colab.
+- **Error Boundaries:** Broad exception catching without structured logging.
+
+## Path to Production
+1. **Environment Abstraction:** Implement `python-dotenv` for API key management and command-line arguments for input/output directories.
+2. **Dependency Management:** Move `!pip` installs to a standard `requirements.txt` file.
+3. **Asynchronous Processing:** Implement `asyncio` to handle multiple file summaries in parallel, respecting rate limits via a semaphore.
+4. **Containerization:** Dockerize the Poppler and Python environment to ensure consistent behavior across different host OSs.

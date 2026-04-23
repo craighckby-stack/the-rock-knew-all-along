@@ -3,20 +3,22 @@
 > **Distillation Status**: AUTO-GENERATED
 > **Engine Specification**: HUXLEY_REASONING_ENGINE_V3.2 (Tri-Loop)
 > **Identity Guard**: DEFAULT
+> **Genetic Siphon**: INACTIVE
 > **License Notice**: NOT FOR COMMERCIAL USE WITHOUT PURCHASE. Contact administrator for commercial licensing options.
-> **Analysis Scope**: 4 unique logic files across multiple branches.
+> **Analysis Scope**: 5 unique logic files across multiple branches.
 
-### Polymorphic File Ingestion Engine
+### Polymorphic Ingestion Layer
 **File:** ApiGemini.py
+**Target Branch**: `ingestion/polymorphic-streamer`
 
-> A unified ingestion logic that bridges binary document formats and raw text into a coherent string stream using external process execution and native library parsing.
+> Abstracts varied binary and text formats into a unified string stream using external process execution for layout-aware PDF extraction.
 
 **Alignment**: 85%
 **CCRR (Certainty-to-Risk)**: 0.88/10
 **Philosophy Check**: A system must be permeable to all forms of knowledge before it can claim to synthesize truth.
 
 #### Strategic Mutation
-* Convert the return type to a generator of text chunks to allow for stream-based processing of massive documents, mitigating memory spikes in restricted Colab environments.
+* Implement a generator-based streaming reader to handle multi-gigabyte document processing without causing OOM crashes in restricted environments.
 
 ```typescript
 def read_file(filepath, filename):
@@ -35,15 +37,16 @@ def read_file(filepath, filename):
 ---
 ### Transient API Resilience Loop
 **File:** ApiGemini.py
+**Target Branch**: `api/resilience-loop`
 
-> Handles the non-deterministic nature of cloud-based LLM APIs through an exponential backoff-lite strategy specifically tuned for Gemini free tier limits.
+> Handles non-deterministic network failure and strict API rate-limiting via recursive retry logic and specific exception branching.
 
 **Alignment**: 92%
 **CCRR (Certainty-to-Risk)**: 0.91/10
 **Philosophy Check**: Patience is a technical requirement; the machine must wait for the universe to be ready for its query.
 
 #### Strategic Mutation
-* Integrate a Circuit Breaker pattern that tracks consecutive failures across different threads, halting execution if the API health drops below 40%.
+* Integrate a Circuit Breaker pattern that halts all requests if the failure rate exceeds a specific threshold, preserving API health.
 
 ```typescript
 def ask_gemini(content, retries=3):
@@ -62,80 +65,64 @@ def ask_gemini(content, retries=3):
 ```
 
 ---
-### Semantic Fragmentation Protocol
+### Fractal Narrative Synthesis
 **File:** ApiGemini.py
+**Target Branch**: `engine/semantic-fragmentation`
 
-> Divides monolithic documents into discrete semantic fragments to bypass LLM context window constraints while maintaining data integrity via UTF-8 normalization.
+> Divides monolithic data into semantic fragments to bypass context window constraints while injecting specific persona-driven constraints.
 
-**Alignment**: 90%
+**Alignment**: 95%
 **CCRR (Certainty-to-Risk)**: 0.85/10
-**Philosophy Check**: The whole is merely the sum of slightly distorted parts.
+**Philosophy Check**: Reality is best understood in small, slightly distorted doses.
 
 #### Strategic Mutation
-* Implement semantic overlapping where each chunk contains 10% of the previous chunk's tail to maintain narrative continuity across fragments.
+* Introduce a Recursive Compression layer where the final summary is itself summarized to ensure architectural coherence across fragments.
 
 ```typescript
-MAX = 6000
-chunks = [text[i:i+MAX] for i in range(0, len(text), MAX)]
-chunks = chunks[:10]
-for i, chunk in enumerate(chunks):
-    chunk = chunk.encode("utf-8", "ignore").decode("utf-8")
-    if len(chunk.strip()) < 50:
-        continue
+def summarise(filename, text):
+    MAX = 6000
+    chunks = [text[i:i+MAX] for i in range(0, len(text), MAX)]
+    summary = ""
+    for i, chunk in enumerate(chunks):
+        prompt = (f"Summarise this document fragment scientifically but faintly unhinged...\nFile: {filename}\n---\n{chunk}")
+        summary += ask_gemini(prompt) + "\n\n"
+        time.sleep(1)
+    return summary.strip()
 ```
 
 ---
-### Persona-Driven Narrative Synthesis
-**File:** ApiGemini.py
+### Sovereignty Metadata Anchor
+**File:** README.md
+**Target Branch**: `core/sovereignty-anchor`
 
-> Injects a specific high-entropy persona into the LLM latent space, forcing the model to balance academic rigor with creative absurdity.
+> Enforces architectural sovereignty by embedding philosophical inquiries into the generated metadata of all output artifacts.
 
 **Alignment**: 98%
-**CCRR (Certainty-to-Risk)**: 0.78/10
-**Philosophy Check**: Objectivity is a lie; the machine must embrace the madness of its creator.
+**CCRR (Certainty-to-Risk)**: 0.99/10
+**Philosophy Check**: A system's identity is defined by its immutable output signatures.
 
 #### Strategic Mutation
-* Move the persona definition to a configurable YAML manifest to allow 'Craig-mode' or 'Pure-Academic' modes without modifying the core logic.
+* Transform the static footer into a cryptographic hash of the document content to ensure data integrity and provenance.
 
 ```typescript
-prompt = (
-    f"Summarise this document fragment scientifically but faintly unhinged. "
-    f"150 words max. Be honest about what's in it even if it's a guy named Craig "
-    f"shutting down the internet or a drill press time machine.\n\n"
-    f"File: {filename} (part {i+1}/{len(chunks)})\n---\n{chunk}"
-)
+## Notes
+- The footer of every output PDF asks "does a rock know this is page N?"
+- This is non-negotiable.
 ```
 
 ---
-### Selective Directory Filtration
+### Dynamic Dependency Injection
 **File:** ApiGemini.py
+**Target Branch**: `infra/provisioning-layer`
 
-> A gatekeeper logic that filters the environment for supported document types while ignoring hidden system files or temporary metadata.
+> Uses shell-level escapes to provision the runtime environment dynamically, ensuring functional DNA is active regardless of host pre-configuration.
 
-**Alignment**: 88%
-**CCRR (Certainty-to-Risk)**: 0.94/10
-**Philosophy Check**: Selection is the first step of architectural sovereignty.
+**Alignment**: 75%
+**CCRR (Certainty-to-Risk)**: 0.68/10
+**Philosophy Check**: The machine must first construct its own universe before it can inhabit it.
 
 #### Strategic Mutation
-* Upgrade to a recursive glob pattern with size-threshold filtering to prevent the engine from attempting to ingest massive binary datasets accidentally.
-
-```typescript
-valid_ext = (".pdf", ".docx", ".doc", ".txt", ".md", ".json", ".py")
-files = [f for f in os.listdir(content_dir) if f.lower().endswith(valid_ext) and not f.startswith(".")]
-```
-
----
-### Dynamic Environment Bootstrap
-**File:** ApiGemini.py
-
-> Inline dependency management designed for ephemeral cloud environments, ensuring all external binaries are present before execution.
-
-**Alignment**: 70%
-**CCRR (Certainty-to-Risk)**: 0.65/10
-**Philosophy Check**: Infrastructure should be invisible, yet it is the only thing holding the sky up.
-
-#### Strategic Mutation
-* Abstract dependencies into a containerized environment file to separate system setup from functional logic, increasing portability.
+* Encapsulate environment provisioning into a containerized build process to eliminate platform-specific syntax errors during deployment.
 
 ```typescript
 !pip install -q google-generativeai pdfplumber python-docx fpdf2
